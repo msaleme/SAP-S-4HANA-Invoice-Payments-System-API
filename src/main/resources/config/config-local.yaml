@@ -1,0 +1,70 @@
+# API specification
+api:
+  name: "${project.artifactId}"
+  version: "${project.version}"
+  #Replace with respective autodiscovery id
+  autodiscoveryID: ""
+
+accelerator:
+  logger: "com.mulesoft.accelerator.saphana"
+
+https:
+  host: "0.0.0.0"
+  port: "8082"
+
+until:
+  successful:
+    maxretries: "3"
+    timebetween: "3000"
+
+sap:
+  hana:
+    url: "https://my304163.s4hana.ondemand.com"
+    username: "overridden at deploy time"
+    password: "overridden at deploy time"
+    soap-serviceId: "https://my304163-api.s4hana.ondemand.com/sap/bc/srt/wsdl_ext/flv_10002S111AD1/srvc_url/sap/bc/srt/scs_ext/sap/paymentadvicenotification_in"
+    soap-operation: "PaymentAdviceNotification_In"
+    getPayments:
+      service: "API_OPLACCTGDOCITEMCUBE_SRV"
+      entityType: "A_OperationalAcctgDocItemCube"
+      SenderBusinessSystemID: "SAPACC2"
+      RecipientBusinessSystemID: "0M2PAUF"
+      SenderParty.InternalID: "1001092"
+      RecipientParty.InternalID: "1710-CUST1"
+      PaymentFormCode: "05"
+      BuyerAddress: "Domestic US Customer 1"
+      BuyerCityName: "Atlanta"
+      BuyerCountry: "US"
+      currencyCode: "USD"
+      languageCode: "E"
+      SupplierAddress: "Test GmbH"
+      SupplierStreetName: "Franz-Bläsi Str 5"
+      SupplierPostalCode: "68309"
+      SupplierCityName: "PRATTVILLE"
+      SupplierCountry: "DE"
+      SupplierRegion: "8"
+      CorrespondenceLanguage: "E"
+      PaymentTransactionInitiatorBankAccountBankAccountStandardID: "DE05672700250092303701"
+      PaymentTransactionInitiatorBankAccountBankAccountID: "092303701"
+      PaymentTransactionInitiatorBankAccountHolderName: "SAP AG"
+      PaymentTransactionInitiatorBankAccountCountry: "DE"
+      PaymentTransactionInitiatorBankAccountBankStandardID: "ASPXDEFFXXX"
+      PaymentTransactionInitiatorBankAccountBankRoutingID: "67270025"
+      PaymentTransactionInitiatorBankAccountBankName: "Deutsche Bank AG Wiesloch 2"
+      PaymentTransactionDestinatedBankAccountBankAccountStandardID: "DE97100200300012344321"
+      PaymentTransactionDestinatedBankAccountBankAccountID: "12344321"
+      PaymentTransactionDestinatedBankAccountHolderName: "Test GmbH"
+      PaymentTransactionDestinatedBankAccountCountry: "DE"
+      PaymentTransactionDestinatedBankAccountBankStandardID: "PTSDDENA"
+      PaymentTransactionDestinatedBankAccountBankRoutingID: "10020030"
+      PaymentTransactionDestinatedBankAccountBankName: "Deutsche Bank Waldorf"
+      TypeCode: "01"
+      ItemID: "5100031833"
+      ItemTypeCode: "01"
+
+
+
+
+reconnection:
+  frequency: "3000"
+  attempts: "3"

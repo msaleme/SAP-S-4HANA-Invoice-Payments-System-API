@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:s4hana-soap="http://www.mulesoft.org/schema/mule/s4hana-soap"
+	xmlns:wsc="http://www.mulesoft.org/schema/mule/wsc"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:s4hana="http://www.mulesoft.org/schema/mule/s4hana"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/s4hana http://www.mulesoft.org/schema/mule/s4hana/current/mule-s4hana.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/wsc http://www.mulesoft.org/schema/mule/wsc/current/mule-wsc.xsd
+http://www.mulesoft.org/schema/mule/s4hana-soap http://www.mulesoft.org/schema/mule/s4hana-soap/current/mule-s4hana-soap.xsd">
+<sub-flow name="implementation_getPayments"
+		doc:id="c8d11b3c-872f-4322-8bd4-cb31b157cb2c">
+		<set-variable value="#[attributes.queryParams]"
+			doc:name="Save queryParams"
+			doc:id="8048fa6c-4218-412d-9b29-b3693cb9426a"
+			variableName="queryParams" mimeType="application/java" />
+		<ee:transform doc:name="Set query filter"
+			doc:id="9de67059-fe4b-46bb-92e1-37e9d7556776">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/java
+---
+if(vars.queryParams.updatedDate != null) 
+("ClearingAccountingDocument ne '' and ClearingDate ge datetime'" ++ (vars.queryParams.updatedDate as DateTime as String {format: "yyyy-MM-dd'T'HH:mm:ss"} ) ++ "'") else "ClearingAccountingDocument ne ''"]]></ee:set-payload>
+			</ee:message>
+			<ee:variables>
+			</ee:variables>
+		</ee:transform>
+		<s4hana:query
+			service='#[Mule::p("sap.hana.getPayments.service")]'
+			doc:name="Get Payments" doc:id="8535481e-5b6b-4621-b8e1-9a120d78ccc1"
+			config-ref="SAP_S_4HANA_Config"
+			entityType='#[Mule::p("sap.hana.getPayments.entityType")]'
+			select="AccountingDocument,AccountingDocumentCreationDate,CreationTime,ClearingDate,ClearingAccountingDocument,DocumentReferenceID,AssignmentReference,OriginalReferenceDocument,AccountingDocumentHeaderText,AmountInTransactionCurrency,TransactionCurrency,ClearingDate"
+			filter="#[payload]" />
+		<ee:transform
+			doc:name="merge journal and clearing entries"
+			doc:id="8c76d3f6-8adb-44ba-b1a5-19e65c795178">
+			<ee:message>
+				<ee:set-payload
+					resource="dwl/getPaymentsMergeEntries.dwl" />
+			</ee:message>
+		</ee:transform>
+		<ee:transform doc:name="Prepare Response"
+			doc:id="aebb241d-90a2-4f2f-b12f-4fe9dd9cd4d1">
+			<ee:message>
+				<ee:set-payload
+					resource="dwl/getPaymentsResponse.dwl" />
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+	<sub-flow name="implementation_getPayment"
+		doc:id="de600701-c61d-4421-8041-b30ebb938aa1">
+		<s4hana:query doc:name="Get Payment"
+			doc:id="00eff434-eacd-4e2c-8bb4-2ffdd5da113a"
+			config-ref="SAP_S_4HANA_Config"
+			service='#[Mule::p("sap.hana.getPayment.service")]'
+			entityType='#[Mule::p("sap.hana.getPayment.entityType")]'
+			select="AccountingDocument,AccountingDocumentCreationDate,CreationTime,ClearingDate,ClearingAccountingDocument,DocumentReferenceID,AssignmentReference,OriginalReferenceDocument,AccountingDocumentHeaderText,AmountInTransactionCurrency,TransactionCurrency,ClearingDate"
+			filter="#[&quot;ClearingAccountingDocument eq '&quot; ++ attributes.uriParams.id ++ &quot;'&quot;]" />
+		<choice doc:name="Empty?"
+			doc:id="8f1dbcd7-368f-42fb-8698-c1dfdbc8aa7b">
+			<when expression="#[!isEmpty(payload)]">
+				<ee:transform
+					doc:name="merge journal and clearing entries"
+					doc:id="0c80e64b-5fc1-44eb-9a88-5ddabe882dc3">
+					<ee:message>
+						<ee:set-payload
+							resource="dwl/getPaymentMergeEntries.dwl" />
+					</ee:message>
+				</ee:transform>
+				<ee:transform doc:name="Prepare response"
+					doc:id="23f4cd85-b69d-49a9-a9cb-de5f3537bd38">
+					<ee:message>
+						<ee:set-payload
+							resource="dwl/getPaymentResponse.dwl" />
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise>
+				<ee:transform doc:name="Error Response"
+					doc:id="90f3b0f5-aa0c-4533-a441-ef6c67acc83c">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+	status: "Payment not found"
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</sub-flow>
+	<sub-flow name="implementation-post-invoice-payment" doc:id="d5d0183f-7957-4c22-bcb4-9a7b96a4f53e" >
+		<ee:transform doc:name="Array List" doc:id="7c2880e3-bb10-42e1-aa0e-979a35bb5410" >
+			<ee:message >
+			</ee:message>
+			<ee:variables >
+				<ee:set-variable variableName="AccumArray" ><![CDATA[%dw 2.0
+output application/java
+---
+[]]]></ee:set-variable>
+			</ee:variables>
+		</ee:transform>
+		<foreach doc:name="For Each" doc:id="c4c850c0-fd1a-483d-8d2e-b9b977764079" collection="#[payload]">
+			<set-variable value="#[(uuid()[0 to 34])]" doc:name="Special Id " doc:id="d5680e4f-91f0-48dc-b691-392fafa09561" variableName="uniqueSpecialId " />
+			<set-variable value='#[(vars.uniqueSpecialId[0 to 34]) replace ("-") with ""]' doc:name="Unique Transaction Id " doc:id="93c0646f-27b3-40e8-a0a5-158674549482" variableName="uniqueId" />
+			<set-variable value='#[if(payload.id == null) "90000023" else payload.id]' doc:name="Invoice Reference Id " doc:id="ae37860b-51c4-43f0-9e73-67a8b02452ae" variableName="InvoicerefId" />
+			<set-variable value="#[(if(payload.postingDate == null) now() as Date else payload.postingDate as Date)]" doc:name="Posting Date" doc:id="4657fd1d-ec69-41c7-8ed4-43cdb397672d" variableName="PostingDate" />
+			<set-variable value="#[now() as String {format : &quot;yyyy-M-dd'T'HH:mm:ss'Z'&quot;}]" doc:name="Creation Date " doc:id="d33f0808-ce9d-45fd-949c-0158e4918ace" variableName="CreationDate" />
+			<ee:transform doc:name="Json to Xml Mapping" doc:id="e623639a-3ebd-4425-9000-3c313a90f9d6">
+			<ee:message>
+					<ee:set-payload resource="dwl/post-payments.dwl" />
+			</ee:message>
+		</ee:transform>
+			<s4hana-soap:invoke doc:name="Payment Advice Notification Request" doc:id="a41a4d27-7be1-41c4-aab0-7216a768930a" config-ref="SAP_S4_HANA_Cloud_SOAP_Config" service= "${sap.hana.soap-serviceId}" operation="${sap.hana.soap-operation}">
+			<s4hana-soap:custom-query-params>
+				
+				<s4hana-soap:custom-query-param key="MessageId" value="#[uuid()]" />
+			</s4hana-soap:custom-query-params>
+		</s4hana-soap:invoke>
+			<ee:transform doc:name="Accumulator" doc:id="40077b02-8148-4468-a028-8da5e49211d4" >
+				<ee:message >
+				</ee:message>
+				<ee:variables >
+					<ee:set-variable variableName="AccumArray" ><![CDATA[%dw 2.0
+output application/java
+---
+vars.AccumArray ++ [vars.InvoicerefId]]]></ee:set-variable>
+				</ee:variables>
+			</ee:transform>
+		</foreach>
+		<logger level="DEBUG" doc:name="Number of Transactions" doc:id="c190cf15-c6a5-4db1-bfbf-284f56493184" message="Number of records : #[vars.AccumArray] :: SizeOfArray ::: #[sizeOf(vars.AccumArray)]"/>
+		<ee:transform doc:name="Final Response Payload" doc:id="87ba26f7-785f-41be-8280-44fa775ebd13">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "responseStatus": "SUCCESS"
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</sub-flow>
+
+
+
+</mule>

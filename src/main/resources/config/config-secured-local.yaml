@@ -1,0 +1,11 @@
+keystore:
+  path: ""    
+  alias: ""
+  keyPassword: ""
+  password: ""
+  
+sap:
+  hana:
+    user: ""
+    password: ""
+     

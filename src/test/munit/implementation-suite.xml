@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="implementation-suite.xml" />
+	<munit:test name="implementation_getPayments-test" doc:id="c9067a49-5801-4c14-9110-b7a55051acfc" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Get Payments" doc:id="71d6819e-8fb1-4364-a3c9-a6370b8279b0" processor="s4hana:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="8535481e-5b6b-4621-b8e1-9a120d78ccc1" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://implementationgetPaymentstest/mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://implementationgetPaymentstest/mock_variable_.dwl')]" />
+						<munit-tools:variable key="queryParams" value="#[output application/java --- readUrl('classpath://implementationgetPaymentstest/mock_variable_1.dwl')]" mediaType="application/java" encoding="UTF-8" />
+						<munit-tools:variable key="transactionId" value="#[readUrl('classpath://implementationgetPaymentstest/mock_variable_2.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="1799336c-4196-40af-8faf-e2ba7bb380ef" >
+				<munit:payload value="#[readUrl('classpath://implementationgetPaymentstest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://implementationgetPaymentstest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://implementationgetPaymentstest/set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[readUrl('classpath://implementationgetPaymentstest/set-event_variable_1.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to implementation_getPayments" doc:id="1f466ced-afaf-4823-8386-261967bd4542" name="implementation_getPayments"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="30189dcf-8c89-4a86-bb7f-f1de441bfab6" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import implementationgetPaymentstest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="implementation_getPayment-test" doc:id="eee2283f-468f-4085-a7d0-b08ae2192433" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock Get Payment" doc:id="1749ea60-b25c-4c85-8760-596286adc7b5" processor="s4hana:query">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="00eff434-eacd-4e2c-8bb4-2ffdd5da113a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:payload value="#[output application/java --- readUrl('classpath://implementationgetPaymenttest/mock_payload.dwl')]" mediaType="application/java" encoding="UTF-8" />
+					<munit-tools:variables >
+						<munit-tools:variable key="outboundHeaders" value="#[readUrl('classpath://implementationgetPaymenttest/mock_variable_.dwl')]" />
+						<munit-tools:variable key="transactionId" value="#[readUrl('classpath://implementationgetPaymenttest/mock_variable_1.dwl')]" encoding="UTF-8" />
+					</munit-tools:variables>
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+			<munit:set-event doc:name="Set Input" doc:id="2d153701-9aff-42f8-8202-5e73c14e970c" >
+				<munit:payload value="#[readUrl('classpath://implementationgetPaymenttest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://implementationgetPaymenttest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://implementationgetPaymenttest/set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[readUrl('classpath://implementationgetPaymenttest/set-event_variable_1.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to implementation_getPayment" doc:id="1c7435c5-6ce8-4b6b-8122-f27d2dc29756" name="implementation_getPayment"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert doc:name="Assert payload" doc:id="049767ef-1594-4748-992d-977ca860bb10" message="The payload does not match">
+				<munit-tools:that ><![CDATA[#[%dw 2.0
+import implementationgetPaymenttest::assert_expression_payload
+---
+assert_expression_payload::main({payload: payload, attributes: attributes, vars: vars})]]]></munit-tools:that>
+			</munit-tools:assert>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="Payments-invoice-test-suite" doc:id="99798cb5-864b-40c6-b6aa-404cfe6cf7af" >
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="SAP S/4 HANA SOAP End Point" doc:id="70cea5ac-0b4b-48ae-bfea-662fb21abe86" processor="s4hana-soap:invoke">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="Payment Advice Notification Request" attributeName="doc:name" />
+					<munit-tools:with-attribute whereValue="a41a4d27-7be1-41c4-aab0-7216a768930a" attributeName="doc:id" />
+				</munit-tools:with-attributes>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution >
+			<munit:set-event doc:name="Set Event Payload" doc:id="80d8d030-a51b-4053-84ba-f9987d8dcab2" >
+				<munit:payload value='#[&#10;output application/json&#10;---&#10;(readUrl("classpath://sample_data/input-request.json", "application/json"))&#10;]' />
+			</munit:set-event>
+			<flow-ref doc:name="post:\payments:application\json:accel-saphana-invoicepayments-sys-api-config" doc:id="fb116203-3ec0-42fa-ac9d-ded02a9bfdcd" name="post:\payments:application\json:accel-saphana-invoicepayments-sys-api-config"/>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="e57ab714-87d4-4121-9b57-97a0b0998542" actual="#[payload.responseStatus]" expected='#["SUCCESS"]' message="&quot;payload doesn't match&quot;"/>
+		</munit:validation>
+	</munit:test>
+
+</mule>

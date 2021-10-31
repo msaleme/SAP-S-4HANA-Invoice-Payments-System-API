@@ -1,0 +1,104 @@
+{
+	"info": {
+		"_postman_id": "ccc0b7f2-7868-47a4-b2a3-e52f6daf04d1",
+		"name": "accel-saphana-payments-sys-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getPayment",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{sapHost}}/api/payments/:paymentid",
+					"protocol": "https",
+					"host": [
+						"{{sapHost}}"
+					],
+					"path": [
+						"api",
+						"payments",
+						":paymentid"
+					],
+					"variable": [
+						{
+							"key": "paymentid",
+							"value": "2000000007"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Post-Payment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\n  {\n    \"paymentStatus\": \"Payment Order/Remittance Advice\",\n    \"postingDate\": \"2021-10-10\",\n    \"paymentType\": \"C\",\n    \"authorizationProcessingMode\": \"00\",\n    \"paymentAmount\": 1059,\n    \"netAppliedAmount\": 0,\n    \"balanceAmount\": 0,\n    \"totalAmount\": 0,\n    \"paymentTreatment\": [\n      \n    ],\n    \"paymentMethod\": [\n      \"ZZZ\"\n    ],\n    \"paymentGroup\": [\n      \n    ],\n    \"paymentNumber\": \"\",\n    \"paymentEffectiveDate\": \"2021-10-10\",\n    \"latestGatewayDate\": \"2021-10-10\",\n    \"name\": \"Payment Order/Remittance Advice\",\n    \"id\": \"554681037\"\n  },\n  {\n    \"paymentStatus\": \"Payment Order/Remittance Advice\",\n    \"postingDate\": \"2021-10-10\",\n    \"paymentType\": \"C\",\n    \"authorizationProcessingMode\": \"00\",\n    \"paymentAmount\": 2000,\n    \"netAppliedAmount\": 0,\n    \"balanceAmount\": 0,\n    \"totalAmount\": 0,\n    \"paymentTreatment\": [\n      \n    ],\n    \"paymentMethod\": [\n      \"ZZZ\"\n    ],\n    \"paymentGroup\": [\n      \n    ],\n    \"paymentNumber\": \"\",\n    \"paymentEffectiveDate\": \"2021-10-10\",\n    \"latestGatewayDate\": \"2021-10-10\",\n    \"name\": \"Payment Order/Remittance Advice\",\n    \"id\": \"554841872\"\n  },\n  {\n    \"paymentStatus\": \"Payment Order/Remittance Advice\",\n    \"postingDate\": \"2021-10-10\",\n    \"paymentType\": \"C\",\n    \"authorizationProcessingMode\": \"00\",\n    \"paymentAmount\": 1000,\n    \"netAppliedAmount\": 0,\n    \"balanceAmount\": 0,\n    \"totalAmount\": 0,\n    \"paymentTreatment\": [\n      \n    ],\n    \"paymentMethod\": [\n      \"ZZZ\"\n    ],\n    \"paymentGroup\": [\n      \n    ],\n    \"paymentNumber\": \"\",\n    \"paymentEffectiveDate\": \"2021-10-10\",\n    \"latestGatewayDate\": \"2021-10-10\",\n    \"name\": \"Payment Order/Remittance Advice\",\n    \"id\": \"554719617\"\n  },\n  {\n    \"paymentStatus\": \"Payment Order/Remittance Advice\",\n    \"postingDate\": \"2021-10-10\",\n    \"paymentType\": \"C\",\n    \"authorizationProcessingMode\": \"00\",\n    \"paymentAmount\": 1500,\n    \"netAppliedAmount\": 0,\n    \"balanceAmount\": 0,\n    \"totalAmount\": 0,\n    \"paymentTreatment\": [\n      \n    ],\n    \"paymentMethod\": [\n      \"ZZZ\"\n    ],\n    \"paymentGroup\": [\n      \n    ],\n    \"paymentNumber\": \"\",\n    \"paymentEffectiveDate\": \"2021-10-10\",\n    \"latestGatewayDate\": \"2021-10-10\",\n    \"name\": \"Payment Order/Remittance Advice\",\n    \"id\": \"554648526\"\n  }\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://{{sapHost}}/api/payments"
+			},
+			"response": []
+		},
+		{
+			"name": "getPayments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{sapHost}}/api/payments?updatedDate=2021-03-22T00:43:00",
+					"protocol": "https",
+					"host": [
+						"{{sapHost}}"
+					],
+					"path": [
+						"api",
+						"payments"
+					],
+					"query": [
+						{
+							"key": "updatedDate",
+							"value": "2021-03-22T00:43:00"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "sapHost",
+			"value": "accel-saphana-invoicepayments-sys-api-dev.ca-c1.cloudhub.io"
+		}
+	]
+}

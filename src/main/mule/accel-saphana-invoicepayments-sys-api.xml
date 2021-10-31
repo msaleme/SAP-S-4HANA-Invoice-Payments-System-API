@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd  http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="accel-saphana-invoicepayments-sys-api-main">
+		<http:listener
+			config-ref="accel-saphana-invoicepayments-sys-api-httpListenerConfig"
+			path="/api/*">
+			<http:response
+				statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response
+				statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<set-variable
+			value="#[attributes.&quot;x-correlation-id&quot; default correlationId]"
+			doc:name="TransactionId"
+			doc:id="a42493a8-4f28-48f2-aefe-63b7adaacf0a"
+			variableName="transactionId" />
+		<apikit:router
+			config-ref="accel-saphana-invoicepayments-sys-api-config" />
+		<error-handler>
+			<on-error-propagate type="APIKIT:BAD_REQUEST">
+				<ee:transform
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+					doc:name="Bad Request">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorCode": "400",
+  "errorMessage": "Bad request",
+  "transactionId": vars.transactionId,
+  "timeStamp": now() as DateTime
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[400]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_FOUND">
+				<ee:transform
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+					doc:name="Not Found">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorCode": "404",
+  "errorMessage": "Resource not found",
+  "transactionId": vars.transactionId,
+  "timeStamp": now() as DateTime
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate
+				type="APIKIT:METHOD_NOT_ALLOWED">
+				<ee:transform
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+					doc:name="Method Not Allowed">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorCode": "405",
+  "errorMessage": "Method not allowed",
+  "transactionId": vars.transactionId,
+  "timeStamp": now() as DateTime
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[405]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+				<ee:transform
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+					doc:name="Not Acceptable">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorCode": "406",
+  "errorMessage": "Not acceptable",
+  "transactionId": vars.transactionId,
+  "timeStamp": now() as DateTime
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[406]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate
+				type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+				<ee:transform
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+					doc:name="Unsupported Media Type">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorCode": "415",
+  "errorMessage": "Unsupported media type",
+  "transactionId": vars.transactionId,
+  "timeStamp": now() as DateTime
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[415]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+				<ee:transform
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+					doc:name="Not Implemented">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorCode": "501",
+  "errorMessage": "Not Implemented",
+  "transactionId": vars.transactionId,
+  "timeStamp": now() as DateTime
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[501]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+			<on-error-propagate enableNotifications="true"
+				logException="true" doc:name="On Error Propagate - Generic Handler"
+				doc:id="7b502228-5e2e-4127-a9b1-ab8a74ab3411" type="ANY">
+				<ee:transform doc:name="Generic Error Handler"
+					doc:id="ac303dca-c526-4b47-bb0e-1f2f66099914">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorCode": vars.httpStatusCode default "500",
+  "errorMessage": error.description default "Internal Server Error",
+  "transactionId": vars.transactionId,
+  "timeStamp": now() as DateTime
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[vars.httpStatusCode default 500]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow name="accel-saphana-invoicepayments-sys-api-console">
+		<http:listener
+			config-ref="accel-saphana-invoicepayments-sys-api-httpListenerConfig"
+			path="/console/*">
+			<http:response
+				statusCode="#[vars.httpStatus default 200]">
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:response>
+			<http:error-response
+				statusCode="#[vars.httpStatus default 500]">
+				<http:body><![CDATA[#[payload]]]></http:body>
+				<http:headers><![CDATA[#[vars.outboundHeaders default {}]]]></http:headers>
+			</http:error-response>
+		</http:listener>
+		<apikit:console
+			config-ref="accel-saphana-invoicepayments-sys-api-config" />
+		<error-handler>
+			<on-error-propagate type="APIKIT:NOT_FOUND"
+				doc:name="On Error">
+				<ee:transform doc:name="Not Found"
+					doc:id="071b267a-71e1-4202-b1f4-86d0ad7ecf35"
+					xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+					<ee:message>
+						<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "errorCode": "404",
+  "errorMessage": "Resource not found",
+  "transactionId": vars.transactionId,
+  "timeStamp": now() as DateTime
+}]]></ee:set-payload>
+					</ee:message>
+					<ee:variables>
+						<ee:set-variable variableName="httpStatus"><![CDATA[404]]></ee:set-variable>
+					</ee:variables>
+				</ee:transform>
+			</on-error-propagate>
+		</error-handler>
+	</flow>
+	<flow
+		name="get:\payments:accel-saphana-invoicepayments-sys-api-config">
+		<flow-ref doc:name="implementation_getPayments"
+			doc:id="9e3d68e0-34ff-408b-b7cc-cf62c75f0bbf"
+			name="implementation_getPayments" />
+	</flow>
+	<flow
+		name="get:\payments\(id):accel-saphana-invoicepayments-sys-api-config">
+		<flow-ref doc:name="implementation_getPayment"
+			doc:id="47233fcb-e15d-4804-bafb-66486721c662"
+			name="implementation_getPayment" />
+	</flow>
+	<flow
+		name="get:\ping:accel-saphana-invoicepayments-sys-api-config"
+		doc:id="0daa33b8-bca1-4891-9780-44d442fd736a">
+		<flow-ref doc:name="ping_get-health"
+			doc:id="9aa9f589-b3cf-4026-9373-cc17a989c07d" name="ping_get-health" />
+	</flow>
+	<flow
+		name="put:\payments\(id):application\json:accel-saphana-invoicepayments-sys-api-configg">
+		<ee:transform
+			xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+			doc:name="501 Not implemented">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  errorCode: "501",
+  errorMessage: "This operation has not been implemented",
+  transactionId: correlationId,
+  timeStamp: now() as DateTime
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow
+		name="delete:\payments\(id):accel-saphana-invoicepayments-sys-api-config">
+		<ee:transform
+			xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd"
+			doc:name="501 Not implemented">
+			<ee:message>
+				<ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  errorCode: "501",
+  errorMessage: "This operation has not been implemented",
+  transactionId: correlationId,
+  timeStamp: now() as DateTime
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow
+		name="post:\payments:application\json:accel-saphana-invoicepayments-sys-api-config">
+		<flow-ref doc:name="implementation-post-invoice-payment" doc:id="1b303f09-1d94-4d0b-a88c-3d86f648ed52" name="implementation-post-invoice-payment"/>
+	</flow>
+</mule>

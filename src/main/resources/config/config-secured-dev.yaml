@@ -1,0 +1,9 @@
+sap:
+  hana:
+    user: ""
+    password: ""
+keystore:
+  path: "accelerator-keystore-dev.jks"
+  alias: ""
+  keyPassword: ""
+  password: ""

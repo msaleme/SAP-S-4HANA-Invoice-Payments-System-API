@@ -1,0 +1,66 @@
+[{
+  "id": "ea labore",
+  "postingDate": null,
+  "paymentAmount": 0,
+  "paymentNumber" : "0",
+  "authorizationProcessingMode" : "",
+  "paymentType" : "",
+  "paymentEffectiveDate" : "2020-11-12",
+"paymentStatus": "",
+  "supplier": "eiusmod commodo",
+  "auditInfo": {
+    "createdDate": "1959-04-14T21:56:31.02Z",
+    "isDeleted": false,
+    "createdBy": "Excepteur",
+    "updatedDate": "1978-03-18T08:16:55.996Z",
+    "updatedBy": "irure commodo ex velit in"
+  },
+  "shipping": -87405267.9119059,
+  "taxRate": null,
+  "discountAmount": 60826207.31636971,
+  "exportedDate": "1977-09-16T13:59:58.885Z",
+  "totalTax": -99453953.58027636,
+  "discountTerm": "ad Ut dolore sunt",
+  "taxJurisdiction": "veniam magna Ut",
+  "status": "amet aliqua",
+  "externalIds": [
+    "dolore sunt Lorem ea aliquip",
+    "non id"
+  ],
+  "companyCode": "tempor ut sunt fugiat",
+  "currency": "proident culpa",
+  "invoiceDate": null,
+  "fiscalYear": "sed",
+  "paymentTerm": "proident est cupidatat deserunt",
+  "invoiceItems": [
+    "ut id adipisicing veniam nostrud",
+    {
+      "id": "non veniam id adipisicing Ut",
+      "total": -80414762.06513219,
+      "purchaseOrderItemId": "Ut Duis ut",
+      "description": "ullamco eiusmod Lorem",
+      "quantity": -63457061.700457685,
+      "auditInfo": {
+        "createdDate": "1959-04-14T21:56:31.02Z",
+        "isDeleted": false,
+        "createdBy": "Excepteur",
+        "updatedDate": "1978-03-18T08:16:55.996Z",
+        "updatedBy": "irure commodo ex velit in"
+      },
+      "unit": "sint nulla do exercitation qui",
+      "purchaseOrderId": "nostrud"
+    }
+  ],
+  "totalAmount": -32536976.009548992,
+  "nativeId": "anim minim esse pariatur sint",
+  "payments": [
+    "eiusmod Duis anim amet sint",
+    "Lorem commodo eiusmod ad cillum"
+  ],
+  "exported": false,
+  "canceled": null,
+  "paid": null,
+  "number": "veniam qui Ut",
+  "paymentDate": "1974-11-04T02:19:48.133Z",
+  "taxCode": "ipsum ullamco et cillum in"
+}]

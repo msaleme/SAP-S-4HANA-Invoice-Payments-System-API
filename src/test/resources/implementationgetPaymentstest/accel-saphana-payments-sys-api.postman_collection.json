@@ -1,0 +1,104 @@
+{
+	"info": {
+		"_postman_id": "ccc0b7f2-7868-47a4-b2a3-e52f6daf04d1",
+		"name": "accel-saphana-payments-sys-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "getPayment",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{sapHost}}/api/payments/:paymentid",
+					"protocol": "https",
+					"host": [
+						"{{sapHost}}"
+					],
+					"path": [
+						"api",
+						"payments",
+						":paymentid"
+					],
+					"variable": [
+						{
+							"key": "paymentid",
+							"value": "2000000007"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getPayment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[{\n  \"id\": \"ea labore\",\n  \"postingDate\": null,\n  \"paymentAmount\": 0,\n  \"paymentNumber\" : \"0\",\n  \"authorizationProcessingMode\" : \"\",\n  \"paymentType\" : \"\",\n  \"paymentEffectiveDate\" : \"2020-11-12\",\n\"paymentStatus\": \"\",\n  \"supplier\": \"eiusmod commodo\",\n  \"auditInfo\": {\n    \"createdDate\": \"1959-04-14T21:56:31.02Z\",\n    \"isDeleted\": false,\n    \"createdBy\": \"Excepteur\",\n    \"updatedDate\": \"1978-03-18T08:16:55.996Z\",\n    \"updatedBy\": \"irure commodo ex velit in\"\n  },\n  \"shipping\": -87405267.9119059,\n  \"taxRate\": null,\n  \"discountAmount\": 60826207.31636971,\n  \"exportedDate\": \"1977-09-16T13:59:58.885Z\",\n  \"totalTax\": -99453953.58027636,\n  \"discountTerm\": \"ad Ut dolore sunt\",\n  \"taxJurisdiction\": \"veniam magna Ut\",\n  \"status\": \"amet aliqua\",\n  \"externalIds\": [\n    \"dolore sunt Lorem ea aliquip\",\n    \"non id\"\n  ],\n  \"companyCode\": \"tempor ut sunt fugiat\",\n  \"currency\": \"proident culpa\",\n  \"invoiceDate\": null,\n  \"fiscalYear\": \"sed\",\n  \"paymentTerm\": \"proident est cupidatat deserunt\",\n  \"invoiceItems\": [\n    \"ut id adipisicing veniam nostrud\",\n    {\n      \"id\": \"non veniam id adipisicing Ut\",\n      \"total\": -80414762.06513219,\n      \"purchaseOrderItemId\": \"Ut Duis ut\",\n      \"description\": \"ullamco eiusmod Lorem\",\n      \"quantity\": -63457061.700457685,\n      \"auditInfo\": {\n        \"createdDate\": \"1959-04-14T21:56:31.02Z\",\n        \"isDeleted\": false,\n        \"createdBy\": \"Excepteur\",\n        \"updatedDate\": \"1978-03-18T08:16:55.996Z\",\n        \"updatedBy\": \"irure commodo ex velit in\"\n      },\n      \"unit\": \"sint nulla do exercitation qui\",\n      \"purchaseOrderId\": \"nostrud\"\n    }\n  ],\n  \"totalAmount\": -32536976.009548992,\n  \"nativeId\": \"anim minim esse pariatur sint\",\n  \"payments\": [\n    \"eiusmod Duis anim amet sint\",\n    \"Lorem commodo eiusmod ad cillum\"\n  ],\n  \"exported\": false,\n  \"canceled\": null,\n  \"paid\": null,\n  \"number\": \"veniam qui Ut\",\n  \"paymentDate\": \"1974-11-04T02:19:48.133Z\",\n  \"taxCode\": \"ipsum ullamco et cillum in\"\n}]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "https://{{sapHost}}/api/payments"
+			},
+			"response": []
+		},
+		{
+			"name": "getPayments",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{sapHost}}/api/payments?updatedDate=2021-03-22T00:43:00",
+					"protocol": "https",
+					"host": [
+						"{{sapHost}}"
+					],
+					"path": [
+						"api",
+						"payments"
+					],
+					"query": [
+						{
+							"key": "updatedDate",
+							"value": "2021-03-22T00:43:00"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "sapHost",
+			"value": "accel-saphana-invoicepayments-sys-api.ca-c1.cloudhub.io"
+		}
+	]
+}

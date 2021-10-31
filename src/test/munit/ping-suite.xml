@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="ping-suite.xml" />
+	<munit:test name="ping_get-health-test" doc:id="e9e63c3e-a4c8-4b91-979f-0a415c7a3393" >
+		<munit:behavior >
+			<munit:set-event doc:name="Set Input" doc:id="d5ab6829-d170-42cc-81b3-cd1167c9c998" >
+				<munit:payload value="#[readUrl('classpath://pinggethealthtest/set-event_payload.dwl')]" encoding="UTF-8" />
+				<munit:attributes value="#[readUrl('classpath://pinggethealthtest/set-event_attributes.dwl')]" />
+				<munit:variables >
+					<munit:variable key="outboundHeaders" value="#[readUrl('classpath://pinggethealthtest/set-event_variable_.dwl')]" />
+					<munit:variable key="transactionId" value="#[readUrl('classpath://pinggethealthtest/set-event_variable_1.dwl')]" encoding="UTF-8" />
+				</munit:variables>
+			</munit:set-event>
+		</munit:behavior>
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to ping_get-health" doc:id="fd3fbe66-6e45-46aa-b4bf-f6da0226ecde" name="ping_get-health"/>
+		</munit:execution>
+		<munit:validation >
+			<munit-tools:assert-equals doc:name="Status " doc:id="9e7cc4d5-3873-44f1-b8a8-a48f37473698" actual="#[payload.status]" expected='#["OK"]' message="Status doesn't match"/>
+			<munit-tools:assert-equals doc:name="Http Status" doc:id="0ff13e8c-1977-46a5-a3bc-7e493d91ff82" actual="#[vars.httpStatus]" expected='#["200"]' message="Http status Doesn't match"/>
+		</munit:validation>
+	</munit:test>
+
+</mule>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:s4hana-soap="http://www.mulesoft.org/schema/mule/s4hana-soap"
+	xmlns:accelerator-sap="http://www.mulesoft.org/schema/mule/accelerator-sap"
+	xmlns:api-gateway="http://www.mulesoft.org/schema/mule/api-gateway"
+	xmlns:tls="http://www.mulesoft.org/schema/mule/tls"
+	xmlns:s4hana="http://www.mulesoft.org/schema/mule/s4hana"
+	xmlns:sap="http://www.mulesoft.org/schema/mule/sap"
+	xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns:validation="http://www.mulesoft.org/schema/mule/validation"
+	xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns:secure-properties="http://www.mulesoft.org/schema/mule/secure-properties"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/accelerator-sap http://www.mulesoft.org/schema/mule/accelerator-sap/current/mule-accelerator-sap.xsd
+http://www.mulesoft.org/schema/mule/api-gateway http://www.mulesoft.org/schema/mule/api-gateway/current/mule-api-gateway.xsd 
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd 
+http://www.mulesoft.org/schema/mule/validation http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
+http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd 
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd 
+http://www.mulesoft.org/schema/mule/validation 
+http://www.mulesoft.org/schema/mule/validation/current/mule-validation.xsd 
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/secure-properties http://www.mulesoft.org/schema/mule/secure-properties/current/mule-secure-properties.xsd
+http://www.mulesoft.org/schema/mule/core 
+http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/sap http://www.mulesoft.org/schema/mule/sap/current/mule-sap.xsd
+http://www.mulesoft.org/schema/mule/s4hana http://www.mulesoft.org/schema/mule/s4hana/current/mule-s4hana.xsd
+http://www.mulesoft.org/schema/mule/s4hana-soap http://www.mulesoft.org/schema/mule/s4hana-soap/current/mule-s4hana-soap.xsd">
+	<http:listener-config
+		name="accel-saphana-invoicepayments-sys-api-httpListenerConfig">
+		<http:listener-connection
+			host="${https.host}" port="${https.port}" protocol="HTTPS"
+			tlsContext="common-selfsigned_tlsContext" />
+	</http:listener-config>
+	<import doc:name="common-configuration"
+    doc:id="1267edbf-eb49-4e4c-86c4-4c9b2d8d29b5" file="global-common.xml" />
+  <import doc:name="global-exception"
+    doc:id="57313456-0373-4631-b567-a486a625739d"
+    file="common-error-handler.xml" /> 
+	<accelerator-sap:config
+		name="accelerator-sap-config" doc:name="Accelerator SAP Config"
+		doc:id="67b3ba98-027a-41fd-acbc-0b4ffc9613c5" apiName="${api.name}"
+		apiVersion="${api.version}" />
+	<apikit:config
+		name="accel-saphana-invoicepayments-sys-api-config"
+		api="resource::org.mule.examples:accelerator-saphana-invoicepayments-sys-api:1.2.0:raml:zip:accelerator-saphana-invoicepayments-sys-api.raml"
+		outboundHeadersMapName="outboundHeaders"
+		httpStatusVarName="httpStatus"/>
+	<global-property doc:name="Global Property Mule Env"
+		doc:id="4ff4410f-c0b5-4a26-8ebe-dea8a07c17e2" name="mule.env"
+		value="local" />
+	<secure-properties:config
+		name="Secure_Properties_Config" doc:name="Secure Properties Config"
+		doc:id="d3b006a6-f387-42bf-bbb4-8d5d005fe2e1"
+		file="config/config-secured-${mule.env}.yaml" key="${mule.key}">
+		<secure-properties:encrypt
+			algorithm="Blowfish" />
+	</secure-properties:config>
+	<configuration-properties
+		doc:name="Configuration properties env file"
+		doc:id="6a4a15ca-0cf2-4fb9-b30b-d55c4b6cc1db"
+		file="config/config-${mule.env}.yaml" />
+	<global-property doc:name="Global Property Mule Key"
+		doc:id="35a7661e-00a1-49ba-88cb-cd199275fa0b" name="mule.key"
+		value="mulesoft" />
+	<s4hana:config name="SAP_S_4HANA_Config"
+		doc:name="SAP S 4HANA Config"
+		doc:id="67716922-1b26-4c00-a293-a9ef18771193">
+		<s4hana:basic-authentication-connection
+			baseUrl="${sap.hana.url}" username="${sap.hana.username}"
+			password="${sap.hana.password}" >
+			<reconnection >
+				<reconnect frequency="${reconnection.frequency}" count="${reconnection.attempts}" />
+			</reconnection>
+		</s4hana:basic-authentication-connection>
+	</s4hana:config>
+	<configuration-properties
+		doc:name="Common properties"
+		doc:id="1684fdf4-52c8-4366-802e-d66cbcdc2a65"
+		file="config/common.yaml" />
+	<!-- <api-gateway:autodiscovery
+		apiId="${api.autodiscoveryID}" ignoreBasePath="true"
+		doc:name="API Autodiscovery"
+		doc:id="1ea77b02-6175-4e1f-a6a4-2747294a66ba"
+		flowRef="accel-saphana-invoicepayments-sys-api-main" /> -->
+		
+	<s4hana-soap:config name="SAP_S4_HANA_Cloud_SOAP_Config" doc:name="SAP S4 HANA Cloud SOAP Config" doc:id="1718ee5b-77be-4d08-9daa-25d5f79e117b" >
+		<s4hana-soap:basic-authentication-connection baseUrl="${sap.hana.url}"  username="${sap.hana.username}" password="${sap.hana.password}" />
+	</s4hana-soap:config>
+</mule>
